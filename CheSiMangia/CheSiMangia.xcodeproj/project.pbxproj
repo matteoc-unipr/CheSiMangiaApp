@@ -1,0 +1,600 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		85FDE3512E858649004980B4 /* CheSiMangia.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 85FDE34F2E858649004980B4 /* CheSiMangia.xcdatamodeld */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		85FDE3312E8584E8004980B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85FDE3192E8584E7004980B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85FDE3202E8584E7004980B4;
+			remoteInfo = CheSiMangia;
+		};
+		85FDE33B2E8584E8004980B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85FDE3192E8584E7004980B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 85FDE3202E8584E7004980B4;
+			remoteInfo = CheSiMangia;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		85FDE3212E8584E7004980B4 /* CheSiMangia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CheSiMangia.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		85FDE3302E8584E8004980B4 /* CheSiMangiaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheSiMangiaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85FDE33A2E8584E8004980B4 /* CheSiMangiaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheSiMangiaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85FDE3502E858649004980B4 /* CheSiMangia.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CheSiMangia.xcdatamodel; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		85FDE34E2E8585C8004980B4 /* Exceptions for "CheSiMangia" folder in "CheSiMangia" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 85FDE3202E8584E7004980B4 /* CheSiMangia */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		85FDE3232E8584E7004980B4 /* CheSiMangia */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				85FDE34E2E8585C8004980B4 /* Exceptions for "CheSiMangia" folder in "CheSiMangia" target */,
+			);
+			path = CheSiMangia;
+			sourceTree = "<group>";
+		};
+		85FDE3332E8584E8004980B4 /* CheSiMangiaTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CheSiMangiaTests;
+			sourceTree = "<group>";
+		};
+		85FDE33D2E8584E8004980B4 /* CheSiMangiaUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CheSiMangiaUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		85FDE31E2E8584E7004980B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85FDE32D2E8584E8004980B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85FDE3372E8584E8004980B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		85FDE3182E8584E7004980B4 = {
+			isa = PBXGroup;
+			children = (
+				85FDE34F2E858649004980B4 /* CheSiMangia.xcdatamodeld */,
+				85FDE3232E8584E7004980B4 /* CheSiMangia */,
+				85FDE3332E8584E8004980B4 /* CheSiMangiaTests */,
+				85FDE33D2E8584E8004980B4 /* CheSiMangiaUITests */,
+				85FDE3222E8584E7004980B4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		85FDE3222E8584E7004980B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				85FDE3212E8584E7004980B4 /* CheSiMangia.app */,
+				85FDE3302E8584E8004980B4 /* CheSiMangiaTests.xctest */,
+				85FDE33A2E8584E8004980B4 /* CheSiMangiaUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		85FDE3202E8584E7004980B4 /* CheSiMangia */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85FDE3442E8584E8004980B4 /* Build configuration list for PBXNativeTarget "CheSiMangia" */;
+			buildPhases = (
+				85FDE31D2E8584E7004980B4 /* Sources */,
+				85FDE31E2E8584E7004980B4 /* Frameworks */,
+				85FDE31F2E8584E7004980B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				85FDE3232E8584E7004980B4 /* CheSiMangia */,
+			);
+			name = CheSiMangia;
+			packageProductDependencies = (
+			);
+			productName = CheSiMangia;
+			productReference = 85FDE3212E8584E7004980B4 /* CheSiMangia.app */;
+			productType = "com.apple.product-type.application";
+		};
+		85FDE32F2E8584E8004980B4 /* CheSiMangiaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85FDE3472E8584E8004980B4 /* Build configuration list for PBXNativeTarget "CheSiMangiaTests" */;
+			buildPhases = (
+				85FDE32C2E8584E8004980B4 /* Sources */,
+				85FDE32D2E8584E8004980B4 /* Frameworks */,
+				85FDE32E2E8584E8004980B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85FDE3322E8584E8004980B4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				85FDE3332E8584E8004980B4 /* CheSiMangiaTests */,
+			);
+			name = CheSiMangiaTests;
+			packageProductDependencies = (
+			);
+			productName = CheSiMangiaTests;
+			productReference = 85FDE3302E8584E8004980B4 /* CheSiMangiaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		85FDE3392E8584E8004980B4 /* CheSiMangiaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85FDE34A2E8584E8004980B4 /* Build configuration list for PBXNativeTarget "CheSiMangiaUITests" */;
+			buildPhases = (
+				85FDE3362E8584E8004980B4 /* Sources */,
+				85FDE3372E8584E8004980B4 /* Frameworks */,
+				85FDE3382E8584E8004980B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				85FDE33C2E8584E8004980B4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				85FDE33D2E8584E8004980B4 /* CheSiMangiaUITests */,
+			);
+			name = CheSiMangiaUITests;
+			packageProductDependencies = (
+			);
+			productName = CheSiMangiaUITests;
+			productReference = 85FDE33A2E8584E8004980B4 /* CheSiMangiaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		85FDE3192E8584E7004980B4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					85FDE3202E8584E7004980B4 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					85FDE32F2E8584E8004980B4 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 85FDE3202E8584E7004980B4;
+					};
+					85FDE3392E8584E8004980B4 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 85FDE3202E8584E7004980B4;
+					};
+				};
+			};
+			buildConfigurationList = 85FDE31C2E8584E7004980B4 /* Build configuration list for PBXProject "CheSiMangia" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 85FDE3182E8584E7004980B4;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 85FDE3222E8584E7004980B4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				85FDE3202E8584E7004980B4 /* CheSiMangia */,
+				85FDE32F2E8584E8004980B4 /* CheSiMangiaTests */,
+				85FDE3392E8584E8004980B4 /* CheSiMangiaUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		85FDE31F2E8584E7004980B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85FDE32E2E8584E8004980B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85FDE3382E8584E8004980B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		85FDE31D2E8584E7004980B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85FDE3512E858649004980B4 /* CheSiMangia.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85FDE32C2E8584E8004980B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85FDE3362E8584E8004980B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		85FDE3322E8584E8004980B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85FDE3202E8584E7004980B4 /* CheSiMangia */;
+			targetProxy = 85FDE3312E8584E8004980B4 /* PBXContainerItemProxy */;
+		};
+		85FDE33C2E8584E8004980B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 85FDE3202E8584E7004980B4 /* CheSiMangia */;
+			targetProxy = 85FDE33B2E8584E8004980B4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		85FDE3422E8584E8004980B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		85FDE3432E8584E8004980B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		85FDE3452E8584E8004980B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CheSiMangia/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "CheSiMangia usa la fotocamera per scansionare i prodotti.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gino.CheSiMangia;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		85FDE3462E8584E8004980B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CheSiMangia/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "CheSiMangia usa la fotocamera per scansionare i prodotti.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gino.CheSiMangia;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		85FDE3482E8584E8004980B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gino.CheSiMangiaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CheSiMangia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CheSiMangia";
+			};
+			name = Debug;
+		};
+		85FDE3492E8584E8004980B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gino.CheSiMangiaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CheSiMangia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CheSiMangia";
+			};
+			name = Release;
+		};
+		85FDE34B2E8584E8004980B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gino.CheSiMangiaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CheSiMangia;
+			};
+			name = Debug;
+		};
+		85FDE34C2E8584E8004980B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JAJ6639RX3;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = gino.CheSiMangiaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CheSiMangia;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		85FDE31C2E8584E7004980B4 /* Build configuration list for PBXProject "CheSiMangia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85FDE3422E8584E8004980B4 /* Debug */,
+				85FDE3432E8584E8004980B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85FDE3442E8584E8004980B4 /* Build configuration list for PBXNativeTarget "CheSiMangia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85FDE3452E8584E8004980B4 /* Debug */,
+				85FDE3462E8584E8004980B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85FDE3472E8584E8004980B4 /* Build configuration list for PBXNativeTarget "CheSiMangiaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85FDE3482E8584E8004980B4 /* Debug */,
+				85FDE3492E8584E8004980B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		85FDE34A2E8584E8004980B4 /* Build configuration list for PBXNativeTarget "CheSiMangiaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85FDE34B2E8584E8004980B4 /* Debug */,
+				85FDE34C2E8584E8004980B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		85FDE34F2E858649004980B4 /* CheSiMangia.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				85FDE3502E858649004980B4 /* CheSiMangia.xcdatamodel */,
+			);
+			currentVersion = 85FDE3502E858649004980B4 /* CheSiMangia.xcdatamodel */;
+			path = CheSiMangia.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 85FDE3192E8584E7004980B4 /* Project object */;
+}

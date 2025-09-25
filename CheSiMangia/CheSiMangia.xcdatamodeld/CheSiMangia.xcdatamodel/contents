@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CDPrefs" representedClassName="CDPrefs" syncable="YES" codeGenerationType="class">
+        <attribute name="lactoseFree" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="maxMinutes" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="peanutFree" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="skill" attributeType="String"/>
+        <attribute name="vegetarian" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CDProduct" representedClassName="CDProduct" syncable="YES" codeGenerationType="class">
+        <attribute name="allergens" optional="YES" attributeType="String"/>
+        <attribute name="barcode" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="brand" optional="YES" attributeType="String"/>
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="isManual" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="nova" optional="YES" attributeType="Integer 16" minValueString="1" maxValueString="4" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="nutrimentsJSON" optional="YES" attributeType="Binary"/>
+        <attribute name="nutriscore" optional="YES" attributeType="String" minValueString="1" maxValueString="1" regularExpressionString="^[A-E]$"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="barcode"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="CDRecipe" representedClassName="CDRecipe" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="ingredientsJSON" attributeType="Binary"/>
+        <attribute name="kcalPerServing" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="minutes" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="stepsJSON" attributeType="Binary"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="usesBarcodes" optional="YES" attributeType="String"/>
+        <attribute name="variantsJSON" optional="YES" attributeType="Binary"/>
+    </entity>
+</model>
