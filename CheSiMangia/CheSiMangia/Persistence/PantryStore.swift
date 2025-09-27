@@ -11,6 +11,7 @@ final class PantryStore: ObservableObject {
     static let shared = PantryStore(ctx: PersistenceController.shared.container.viewContext)
     private let ctx: NSManagedObjectContext
     @Published var prefs: CDPrefs?
+    @Published var products: [CDProduct] = []
 
     init(ctx: NSManagedObjectContext) {
         self.ctx = ctx
@@ -18,6 +19,27 @@ final class PantryStore: ObservableObject {
     }
 
     private func loadPrefs() {
+        let r: NSFetchRequest<CDPrefs> = CDPrefs.fetchRequest()
+        if let p = try? ctx.fetch(r).first {
+            prefs = p
+        } else {
+            let p = CDPrefs(context: ctx)
+            p.vegetarian = false
+            p.lactoseFree = false
+            p.peanutFree = false
+            p.maxMinutes = 30
+            p.skill = "beginner"
+            try? ctx.save()
+            prefs = p
+        }
+    }
+    
+    func refresh() {
+        let req: NSFetchRequest<CDProduct> = CDProduct.fetchRequest()
+        req.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+        products = (try? ctx.fetch(req)) ?? []
+        
+        // prefs come prima…
         let r: NSFetchRequest<CDPrefs> = CDPrefs.fetchRequest()
         if let p = try? ctx.fetch(r).first {
             prefs = p
@@ -104,5 +126,11 @@ final class PantryStore: ObservableObject {
     func delete(_ product: CDProduct) {
         ctx.delete(product)
         try? ctx.save()
+    }
+    
+    func incrementQuantity(for product: CDProduct) {
+        product.quantity += 1
+        try? ctx.save()
+        refresh()
     }
 }

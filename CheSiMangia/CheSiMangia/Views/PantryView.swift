@@ -41,16 +41,23 @@ struct PantryView: View {
                             ProductDetailView(product: p)
                         } label: {
                             ProductRow(product: p)
-                        }
-                        // Swipe a destra per eliminare rapidamente
+                        }.id(p.objectID)
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button(role: .destructive) {
-                                ctx.delete(p)
-                                try? ctx.save()
+                                ctx.delete(p); try? ctx.save()
                             } label: {
                                 Label("Elimina", systemImage: "trash")
                             }
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button {
+                                vm.pantry.incrementQuantity(for: p)
+                            } label: {
+                                QuantityBubble(product: p)
+                            }
+                            .tint(.blue)
+                        }
+
                     }
                     .onDelete { idx in
                         idx.map { products[$0] }.forEach(ctx.delete)
@@ -310,3 +317,21 @@ struct Badge: View {
             .background(.thinMaterial, in: Capsule())
     }
 }
+
+private struct QuantityBubble: View {
+    @ObservedObject var product: CDProduct
+
+    var body: some View {
+        ZStack {
+            Color.clear.overlay(
+                Text("\(product.quantity)")
+                    .font(.headline.weight(.bold))
+                    .foregroundColor(.blue)
+                    .monospacedDigit()
+            )
+        }
+        .frame(width: 32, height: 32)
+        .accessibilityLabel("Quantità \(product.quantity)")
+    }
+}
+
