@@ -15,8 +15,8 @@ struct CheSiMangiaApp: App {
         WindowGroup {
                     RootView()
                         .environmentObject(vm)
-                        // 🔑 qui metti il contesto di Core Data
                         .environment(\.managedObjectContext, persistence.container.viewContext)
+                        .tint(.orange)
                 }
     }
 }

@@ -29,53 +29,48 @@ struct PantryView: View {
     @State private var isSearching = false
     @State private var searchTask: Task<Void, Never>?
     @FocusState private var manualFocused: Bool
-    
+
     var body: some View {
         NavigationStack {
-            List {
-                inputSection
-                resultsSection          // risultati ricerca OFF
-                Section("Prodotti") {
-                    ForEach(products) { p in
-                        NavigationLink {
-                            ProductDetailView(product: p)
-                        } label: {
-                            ProductRow(product: p)
-                        }.id(p.objectID)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button(role: .destructive) {
-                                ctx.delete(p); try? ctx.save()
-                            } label: {
-                                Label("Elimina", systemImage: "trash")
-                            }
+            ZStack {
+                // ====== LIST PRINCIPALE ======
+                List {
+                    inputSection
+                    resultsSection
+                    Section("Prodotti") {
+                        ForEach(products) { p in
+                            NavigationLink {
+                                ProductDetailView(product: p)
+                            } label: { ProductRow(product: p) }
+                                .id(p.objectID)
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        ctx.delete(p); try? ctx.save()
+                                    } label: { Label("Elimina", systemImage: "trash") }
+                                }.tint(.red)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button { vm.pantry.incrementQuantity(for: p) } label: {
+                                        QuantityBubble(product: p)
+                                    }
+                                    .tint(.green)
+                                }
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button {
-                                vm.pantry.incrementQuantity(for: p)
-                            } label: {
-                                QuantityBubble(product: p)
-                            }
-                            .tint(.blue)
+                        .onDelete { idx in
+                            idx.map { products[$0] }.forEach(ctx.delete)
+                            try? ctx.save()
                         }
-
-                    }
-                    .onDelete { idx in
-                        idx.map { products[$0] }.forEach(ctx.delete)
-                        try? ctx.save()
                     }
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                // ====== FAB SCAN IN BASSO ======
+                .overlay(alignment: .bottom) {
+                    FloatingScanButton {
                         if DataScannerViewController.isSupported && DataScannerViewController.isAvailable {
                             showScanner = true
                         } else {
                             scannerUnavailable = true
                         }
-                    } label: {
-                        Image(systemName: "barcode.viewfinder")
                     }
+                    .padding(.bottom, 28)   // solleva sopra la TabBar
                 }
             }
             .alert("Scanner non disponibile", isPresented: $scannerUnavailable) {
@@ -84,19 +79,14 @@ struct PantryView: View {
                 Text("Il tuo dispositivo non supporta DataScanner o la fotocamera non è disponibile. Usa l’inserimento manuale.")
             }
             .navigationTitle("Dispensa")
-            .onChange(of: vm.lastScanError) { _, new in
-                showError = (new != nil)
-            }
+            .onChange(of: vm.lastScanError) { _, new in showError = (new != nil) }
             .alert("Errore", isPresented: $showError) {
                 Button("OK", role: .cancel) { vm.lastScanError = nil }
-            } message: {
-                Text(vm.lastScanError ?? "")
-            }
+            } message: { Text(vm.lastScanError ?? "") }
         }
         .sheet(isPresented: $showScanner) {
             ScannerView { code in
                 showScanner = false
-                // tieni solo le cifre (alcuni symbology possono includere spazi o char strani)
                 let clean = code.replacingOccurrences(of: #"[^0-9]"#, with: "", options: .regularExpression)
                 vm.handleScanned(barcode: clean)
             }
@@ -114,22 +104,17 @@ struct PantryView: View {
                     .disableAutocorrection(true)
                     .keyboardType(.asciiCapable)
                     .focused($manualFocused)
-                    .onChange(of: manual) { _, newValue in
-                        handleSearchChange(newValue)
-                    }
+                    .onChange(of: manual) { _, newValue in handleSearchChange(newValue) }
                     .onSubmit { Task { await addManual() } }
 
-                Button("Aggiungi") {
-                    Task { await addManual() }
-                }
-                .buttonStyle(.borderedProminent)
+                Button("Aggiungi") { Task { await addManual() } }
+                    .buttonStyle(.borderedProminent)
             }
             if isSearching {
                 HStack(spacing: 8) {
                     ProgressView()
                     Text("Cerco su OpenFoodFacts…")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.footnote).foregroundStyle(.secondary)
                 }
             }
         }
@@ -155,12 +140,9 @@ struct PantryView: View {
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(p.product_name ?? "Senza nome")
-                                    .font(.headline)
-                                    .lineLimit(1)
+                                    .font(.headline).lineLimit(1)
                                 Text(p.brands ?? "")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
+                                    .font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
                             }
                             Spacer()
                             Button {
@@ -169,21 +151,17 @@ struct PantryView: View {
                                         try vm.pantry.addOFFProduct(p)
                                         searchTask?.cancel()
                                         withAnimation {
-                                            results.removeAll()   // chiude la sezione "Risultati OFF"
+                                            results.removeAll()
                                             isSearching = false
-                                            searchTask?.cancel()
                                         }
-                                        manual = ""               // svuota il campo di ricerca
-                                        manualFocused = false     // chiude la tastiera
+                                        manual = ""
+                                        manualFocused = false
                                     } catch {
                                         vm.lastScanError = "Impossibile aggiungere il prodotto."
                                     }
                                 }
-                            } label: {
-                                Image(systemName: "plus.circle.fill").imageScale(.large)
-                            }
+                            } label: { Image(systemName: "plus.circle.fill").imageScale(.large) }
                             .buttonStyle(.plain)
-
                         }
                     }
                 }
@@ -196,15 +174,14 @@ struct PantryView: View {
     private func addManual() async {
         let t = manual.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !t.isEmpty else { return }
-        manualFocused = false                        
+        manualFocused = false
         defer { manual = "" }
 
         if isBarcode(t) {
-            vm.handleScanned(barcode: t) // barcode numerico → OFF
+            vm.handleScanned(barcode: t)
             return
         }
 
-        // se ho già risultati, prendo il primo; altrimenti cerco ora
         if let first = results.first {
             do { try vm.pantry.addOFFProduct(first) }
             catch { vm.lastScanError = "Errore nel salvataggio del prodotto" }
@@ -215,7 +192,6 @@ struct PantryView: View {
                 if let first = found.first {
                     try vm.pantry.addOFFProduct(first)
                 } else {
-                    // fallback: crea un prodotto manuale col nome
                     try vm.pantry.addManualProduct(name: t, brand: nil)
                 }
             } catch {
@@ -224,41 +200,27 @@ struct PantryView: View {
         }
     }
 
-    // MARK: - Ricerca helper
-
-    /// Vero se il testo è un barcode (solo cifre 8–14)
     private func isBarcode(_ s: String) -> Bool {
         s.range(of: #"^\d{8,14}$"#, options: .regularExpression) != nil
     }
 
     private func handleSearchChange(_ text: String) {
-        // cancella eventuale task precedente (debounce)
         searchTask?.cancel()
         results.removeAll()
-
         let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !q.isEmpty else { isSearching = false; return }
-
-        // se sembra barcode, non cercare per nome
         guard !isBarcode(q) else { isSearching = false; return }
-
-        // evita traffico eccessivo: cerca solo con ≥ 2 caratteri (puoi mettere 3)
         guard q.count >= 2 else { isSearching = false; return }
 
         isSearching = true
         searchTask = Task { @MainActor in
-            // debounce 400 ms
             try? await Task.sleep(nanoseconds: 400_000_000)
             do {
                 let found = try await OFFClient.shared.searchProducts(query: q)
-                // tieni solo quelli con nome/brand
                 self.results = found.filter { ($0.product_name?.isEmpty == false) || ($0.brands?.isEmpty == false) }
                 self.isSearching = false
             } catch {
-                // niente alert su typing: semplicemente azzera risultati
-                self.results = []
-                self.isSearching = false
-                // (facoltativo) print per debug:
+                self.results = []; self.isSearching = false
                 print("[OFF][SEARCH][ERR] \(error)")
             }
         }
@@ -285,17 +247,12 @@ private struct ProductRow: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(product.name ?? "Senza nome")
-                    .font(.headline)
-                    .lineLimit(1)
+                    .font(.headline).lineLimit(1)
                 HStack(spacing: 6) {
                     Text(product.brand ?? "")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+                        .font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
                     if product.isManual {
-                        Text("• manuale")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        Text("• manuale").font(.caption).foregroundStyle(.secondary)
                     }
                 }
             }
@@ -320,18 +277,30 @@ struct Badge: View {
 
 private struct QuantityBubble: View {
     @ObservedObject var product: CDProduct
-
     var body: some View {
         ZStack {
-            Color.clear.overlay(
-                Text("\(product.quantity)")
-                    .font(.headline.weight(.bold))
-                    .foregroundColor(.blue)
-                    .monospacedDigit()
-            )
+            Text("\(product.quantity)")
+                .font(.headline).bold()
+                .foregroundStyle(.blue)
         }
         .frame(width: 32, height: 32)
         .accessibilityLabel("Quantità \(product.quantity)")
     }
 }
 
+// MARK: - Floating Scan Button
+
+private struct FloatingScanButton: View {
+    var action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "barcode.viewfinder")
+                .font(.system(size: 24, weight: .semibold))
+                .foregroundStyle(.white)
+                .padding(22)
+                .background(Circle().fill(Color.orange))
+                .shadow(radius: 8, y: 4)
+        }
+        .accessibilityLabel("Scansiona nuovo prodotto")
+    }
+}
