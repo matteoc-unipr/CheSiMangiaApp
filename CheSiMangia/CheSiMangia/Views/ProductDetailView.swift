@@ -12,18 +12,20 @@ struct ProductDetailView: View {
     @ObservedObject var product: CDProduct
     @EnvironmentObject var vm: AppViewModel
     @Environment(\.managedObjectContext) private var ctx
+    @Environment(\.dismiss) private var dismiss
 
     @State private var showNutriSheet = false
     @State private var showNovaSheet = false
     @State private var isEditingName = false
     @State private var tempName: String = ""
     @FocusState private var nameFocused: Bool
+    @State private var showDeleteAlert = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
 
-                // --- TITOLO PRODOTTO (al posto del "Prodotto") ---
+                // --- TITOLO PRODOTTO ---
                 HStack {
                     if isEditingName {
                         TextField("Nome prodotto", text: $tempName, onCommit: saveName)
@@ -33,9 +35,7 @@ struct ProductDetailView: View {
 
                         Spacer()
 
-                        Button {
-                            saveName()
-                        } label: {
+                        Button { saveName() } label: {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.title2)
                         }
@@ -56,12 +56,28 @@ struct ProductDetailView: View {
                         }
                     }
                 }
+
+                // Brand
                 if let brand = product.brand, !brand.isEmpty {
                     Text(brand).foregroundStyle(.secondary)
                 }
-                
-                
-                // Badge Nutri-Score e Nova
+
+                // --- CONTATORE QUANTITÀ ---
+                HStack {
+                    Spacer()
+                    QuantityCounter(
+                        value: quantity,
+                        onIncrement: { setQuantity(quantity + 1) },
+                        onDecrement: {
+                            if quantity > 1 { setQuantity(quantity - 1) }
+                            else { showDeleteAlert = true }
+                        }
+                    )
+                    Spacer()
+                }
+                .padding(.vertical, 20) // più distacco sopra/sotto
+
+                // Badge Nutri-Score & NOVA
                 HStack(spacing: 12) {
                     if let ns = product.nutriscore?.uppercased() {
                         HStack(spacing: 4) {
@@ -73,7 +89,7 @@ struct ProductDetailView: View {
                             }.buttonStyle(.plain)
                         }
                     }
-                    if let nova = product.nova?.intValue, (1...4).contains(nova) {
+                    if let nova = (product.value(forKey: "nova") as? NSNumber)?.intValue, (1...4).contains(nova) {
                         HStack(spacing: 4) {
                             Text("NOVA:")
                                 .font(.caption)
@@ -84,55 +100,134 @@ struct ProductDetailView: View {
                         }
                     }
                 }
-                .padding(.bottom, 16)
-
-
+                
+                // Valori nutrizionali
                 if product.nutrimentsJSON != nil {
                     NutritionFactsView(nutrimentsData: product.nutrimentsJSON)
                 }
 
+                // Allergeni
                 if let allergens = product.allergens, !allergens.isEmpty {
                     Text("Allergeni").font(.headline)
                     WrapChips(items: allergens.split(separator: ",").map(String.init))
                 }
 
+                // Immagine
                 Text("Immagine").font(.headline)
-                AsyncImage(url: URL(string: product.imageURL ?? "")) { $0.resizable().scaledToFit() } placeholder: {
+                AsyncImage(url: URL(string: product.imageURL ?? "")) {
+                    $0.resizable().scaledToFit()
+                } placeholder: {
                     Rectangle().fill(.gray.opacity(0.2)).frame(height: 160)
                 }
 
+                // Genera ricette
                 Button {
                     vm.generateRecipes(using: product)
                 } label: {
                     Label("Genera ricette con questo prodotto", systemImage: "wand.and.stars")
                 }
                 .buttonStyle(.borderedProminent)
+
+                // --- ELIMINA PRODOTTO (in fondo) ---
+                Button(role: .destructive) {
+                    showDeleteAlert = true
+                } label: {
+                    Label("Elimina prodotto dalla dispensa", systemImage: "trash")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+                .padding(.top, 24)
             }
             .padding()
         }
+        // Sheet Nutri-Score
         .sheet(isPresented: $showNutriSheet) {
             NutriScoreInfoSheet(barcode: product.barcode ?? "", grade: product.nutriscore?.uppercased())
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.medium, .large], selection: .constant(.medium))
                 .presentationDragIndicator(.visible)
         }
+        // Sheet NOVA
         .sheet(isPresented: $showNovaSheet) {
-            NovaInfoSheet(barcode: product.barcode ?? "", level: product.nova?.intValue)
-                .presentationDetents([.medium, .large])
+            NovaInfoSheet(barcode: product.barcode ?? "", level: (product.value(forKey: "nova") as? NSNumber)?.intValue)
+                .presentationDetents([.medium, .large], selection: .constant(.medium))
                 .presentationDragIndicator(.visible)
+        }
+        // Conferma eliminazione (bottone rosso)
+        .alert("Eliminare questo prodotto dalla dispensa?", isPresented: $showDeleteAlert) {
+            Button("Annulla", role: .cancel) {}
+            Button("Elimina", role: .destructive) { deleteProduct() }
+        } message: {
+            Text("“\(product.name ?? "Prodotto")” verrà rimosso definitivamente dalla dispensa.")
         }
     }
 
+    // MARK: - Helpers quantità (compatibili con Int16 opzionale/non opzionale)
+    private var quantity: Int {
+        (product.value(forKey: "quantity") as? NSNumber)?.intValue ?? 1
+    }
+
+    private func setQuantity(_ newValue: Int) {
+        product.setValue(Int16(max(0, newValue)), forKey: "quantity")
+        try? ctx.save()
+    }
+
+    // MARK: - Actions
+
     private func saveName() {
         let trimmed = tempName.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
-            isEditingName = false
-            return
-        }
+        guard !trimmed.isEmpty else { isEditingName = false; return }
         product.name = trimmed
         try? ctx.save()
         isEditingName = false
     }
+
+    private func deleteProduct() {
+        ctx.delete(product)
+        try? ctx.save()
+        dismiss()
+    }
 }
+
+// MARK: - Contatore UI
+
+private struct QuantityCounter: View {
+    let value: Int
+    let onIncrement: () -> Void
+    let onDecrement: () -> Void
+
+    var body: some View {
+        HStack(spacing: 16) {
+            Button(action: onDecrement) {
+                Image(systemName: "minus")
+                    .font(.body)
+                    .frame(width: 28, height: 28)
+            }
+            .buttonStyle(.bordered)
+            .clipShape(Circle())
+
+            Text("\(value)")
+                .font(.title3).bold()
+                .monospacedDigit()
+                .frame(minWidth: 36)
+
+            Button(action: onIncrement) {
+                Image(systemName: "plus")
+                    .font(.body)
+                    .frame(width: 28, height: 28)
+            }
+            .buttonStyle(.borderedProminent)
+            .clipShape(Circle())
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(.ultraThinMaterial, in: Capsule())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Quantità")
+        .accessibilityValue("\(value)")
+    }
+}
+
 
 // MARK: - WrapChips
 
@@ -147,7 +242,7 @@ struct WrapChips: View {
     }
 }
 
-// MARK: - Nutrition Facts (larghezza piena)
+// MARK: - Nutrition Facts (come già in uso)
 
 private struct NutritionFactsView: View {
     let nutrimentsData: Data?
@@ -203,13 +298,10 @@ private struct NutritionFactsView: View {
         .padding(.horizontal, 12).padding(.vertical, 10)
     }
 
-    // Helpers
-
     private func decodeNutriments(_ data: Data?) -> [String: JSONValue] {
         guard let data else { return [:] }
         return (try? JSONDecoder().decode([String: JSONValue].self, from: data)) ?? [:]
     }
-
     private func value(_ dict: [String: JSONValue], _ key: String) -> Double? {
         guard let v = dict[key] else { return nil }
         switch v {
@@ -218,15 +310,11 @@ private struct NutritionFactsView: View {
         default: return nil
         }
     }
-
     private func energyKcal(_ dict: [String: JSONValue], suffix: String) -> Double? {
         if let kcal = value(dict, "energy-kcal\(suffix)") { return kcal }
-        if let kj = value(dict, "energy-kj\(suffix)") ?? value(dict, "energy\(suffix)") {
-            return kj / 4.184
-        }
+        if let kj = value(dict, "energy-kj\(suffix)") ?? value(dict, "energy\(suffix)") { return kj / 4.184 }
         return nil
     }
-
     private func format(_ x: Double?, unit: String) -> String {
         guard let x else { return "–" }
         if unit == "mg" || unit == "kcal" { return "\(Int(round(x))) \(unit)" }

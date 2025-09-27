@@ -18,6 +18,7 @@
         <attribute name="nova" optional="YES" attributeType="Integer 16" minValueString="1" maxValueString="4" defaultValueString="0" usesScalarValueType="NO"/>
         <attribute name="nutrimentsJSON" optional="YES" attributeType="Binary"/>
         <attribute name="nutriscore" optional="YES" attributeType="String" minValueString="1" maxValueString="1" regularExpressionString="^[A-E]$"/>
+        <attribute name="quantity" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="barcode"/>
