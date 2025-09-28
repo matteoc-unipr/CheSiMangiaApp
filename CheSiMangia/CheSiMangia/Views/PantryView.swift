@@ -47,7 +47,8 @@ struct PantryView: View {
                                     Button(role: .destructive) {
                                         ctx.delete(p); try? ctx.save()
                                     } label: { Label("Elimina", systemImage: "trash") }
-                                }.tint(.red)
+                                }
+                                .tint(.red)
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                     Button { vm.pantry.incrementQuantity(for: p) } label: {
                                         QuantityBubble(product: p)
@@ -70,7 +71,7 @@ struct PantryView: View {
                             scannerUnavailable = true
                         }
                     }
-                    .padding(.bottom, 28)   // solleva sopra la TabBar
+                    .padding(.bottom, 28)   // sopra la TabBar
                 }
             }
             .alert("Scanner non disponibile", isPresented: $scannerUnavailable) {
@@ -104,11 +105,16 @@ struct PantryView: View {
                     .disableAutocorrection(true)
                     .keyboardType(.asciiCapable)
                     .focused($manualFocused)
-                    .onChange(of: manual) { _, newValue in handleSearchChange(newValue) }
-                    .onSubmit { Task { await addManual() } }
+                    .onChange(of: manual) { _, newValue in
+                        debouncedSearch(text: newValue)
+                    }
+                    // Invio/Cerca: SOLO ricerca (se è nome). Se è barcode, aggiunge da OFF.
+                    .onSubmit { Task { await submitSearch() } }
 
-                Button("Aggiungi") { Task { await addManual() } }
-                    .buttonStyle(.borderedProminent)
+                Button("Aggiungi") {
+                    Task { await addManualProduct() }   // sempre manuale
+                }
+                .buttonStyle(.borderedProminent)
             }
             if isSearching {
                 HStack(spacing: 8) {
@@ -149,13 +155,7 @@ struct PantryView: View {
                                 Task {
                                     do {
                                         try vm.pantry.addOFFProduct(p)
-                                        searchTask?.cancel()
-                                        withAnimation {
-                                            results.removeAll()
-                                            isSearching = false
-                                        }
-                                        manual = ""
-                                        manualFocused = false
+                                        clearResultsUI()
                                     } catch {
                                         vm.lastScanError = "Impossibile aggiungere il prodotto."
                                     }
@@ -169,44 +169,26 @@ struct PantryView: View {
         }
     }
 
-    // MARK: - Azioni
+    // MARK: - Ricerca
 
-    private func addManual() async {
-        let t = manual.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !t.isEmpty else { return }
-        manualFocused = false
-        defer { manual = "" }
+    private func submitSearch() async {
+        let q = manual.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { clearResultsUI(); return }
 
-        if isBarcode(t) {
-            vm.handleScanned(barcode: t)
-            return
-        }
-
-        if let first = results.first {
-            do { try vm.pantry.addOFFProduct(first) }
-            catch { vm.lastScanError = "Errore nel salvataggio del prodotto" }
-            results.removeAll()
+        if isBarcode(q) {
+            // Per i barcode è comodo aggiungere subito
+            vm.handleScanned(barcode: q)
+            manual = ""
+            clearResultsUI()
         } else {
-            do {
-                let found = try await OFFClient.shared.searchProducts(query: t)
-                if let first = found.first {
-                    try vm.pantry.addOFFProduct(first)
-                } else {
-                    try vm.pantry.addManualProduct(name: t, brand: nil)
-                }
-            } catch {
-                vm.lastScanError = "Errore nella ricerca su OFF."
-            }
+            await searchOFF(query: q)
         }
     }
 
-    private func isBarcode(_ s: String) -> Bool {
-        s.range(of: #"^\d{8,14}$"#, options: .regularExpression) != nil
-    }
-
-    private func handleSearchChange(_ text: String) {
+    private func debouncedSearch(text: String) {
         searchTask?.cancel()
         results.removeAll()
+
         let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !q.isEmpty else { isSearching = false; return }
         guard !isBarcode(q) else { isSearching = false; return }
@@ -214,16 +196,49 @@ struct PantryView: View {
 
         isSearching = true
         searchTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 400_000_000)
-            do {
-                let found = try await OFFClient.shared.searchProducts(query: q)
-                self.results = found.filter { ($0.product_name?.isEmpty == false) || ($0.brands?.isEmpty == false) }
-                self.isSearching = false
-            } catch {
-                self.results = []; self.isSearching = false
-                print("[OFF][SEARCH][ERR] \(error)")
-            }
+            try? await Task.sleep(nanoseconds: 400_000_000) // 400 ms
+            await searchOFF(query: q)
         }
+    }
+
+    @MainActor
+    private func searchOFF(query: String) async {
+        isSearching = true
+        do {
+            let found = try await OFFClient.shared.searchProducts(query: query)
+            results = found.filter { ($0.product_name?.isEmpty == false) || ($0.brands?.isEmpty == false) }
+        } catch {
+            results = []
+        }
+        isSearching = false
+    }
+
+    private func clearResultsUI() {
+        withAnimation {
+            results.removeAll()
+            isSearching = false
+            manualFocused = false
+        }
+    }
+
+    // MARK: - Azioni
+
+    private func addManualProduct() async {
+        let t = manual.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !t.isEmpty else { return }
+        do {
+            try vm.pantry.addManualProduct(name: t, brand: nil)
+            manual = ""
+            clearResultsUI()
+        } catch {
+            vm.lastScanError = "Errore nel salvataggio del prodotto manuale."
+        }
+    }
+
+    // MARK: - Helper
+
+    private func isBarcode(_ s: String) -> Bool {
+        s.range(of: #"^\d{8,14}$"#, options: .regularExpression) != nil
     }
 }
 
@@ -279,6 +294,7 @@ private struct QuantityBubble: View {
     @ObservedObject var product: CDProduct
     var body: some View {
         ZStack {
+            Circle().fill(Color.white)
             Text("\(product.quantity)")
                 .font(.headline).bold()
                 .foregroundStyle(.blue)
