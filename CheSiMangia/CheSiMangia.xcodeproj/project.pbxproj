@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		85E1E8F32E92752D00AFED54 /* llama.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85E1E8F22E92752D00AFED54 /* llama.xcframework */; };
+		85E1E8F42E92752D00AFED54 /* llama.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85E1E8F22E92752D00AFED54 /* llama.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		85FDE3512E858649004980B4 /* CheSiMangia.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 85FDE34F2E858649004980B4 /* CheSiMangia.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -27,7 +29,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		85E1E8F52E92752D00AFED54 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				85E1E8F42E92752D00AFED54 /* llama.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		85E1E8F22E92752D00AFED54 /* llama.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = llama.xcframework; path = "../llm/llama.cpp/build-apple/llama.xcframework"; sourceTree = "<group>"; };
 		85FDE3212E8584E7004980B4 /* CheSiMangia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CheSiMangia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FDE3302E8584E8004980B4 /* CheSiMangiaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheSiMangiaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FDE33A2E8584E8004980B4 /* CheSiMangiaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheSiMangiaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85E1E8F32E92752D00AFED54 /* llama.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +108,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		85E1E8F12E92752D00AFED54 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				85E1E8F22E92752D00AFED54 /* llama.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		85FDE3182E8584E7004980B4 = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +123,7 @@
 				85FDE3232E8584E7004980B4 /* CheSiMangia */,
 				85FDE3332E8584E8004980B4 /* CheSiMangiaTests */,
 				85FDE33D2E8584E8004980B4 /* CheSiMangiaUITests */,
+				85E1E8F12E92752D00AFED54 /* Frameworks */,
 				85FDE3222E8584E7004980B4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -121,6 +148,7 @@
 				85FDE31D2E8584E7004980B4 /* Sources */,
 				85FDE31E2E8584E7004980B4 /* Frameworks */,
 				85FDE31F2E8584E7004980B4 /* Resources */,
+				85E1E8F52E92752D00AFED54 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

@@ -16,8 +16,23 @@ final class AppViewModel: ObservableObject {
     @Published var generated: [Recipe] = []
 
     let pantry = PantryStore.shared
-    var generator: RecipeGenerator = MockRecipeService() // sostituibile in runtime
+    let llama = LlamaState()
 
+    private(set) lazy var llamaGenerator = LlamaRecipeGenerator(llama: llama)
+
+    var generator: RecipeGenerator!
+
+    init() {
+        do {
+            try llama.loadModel()
+            generator = llamaGenerator
+        } catch {
+            generator = MockRecipeService()
+            lastScanError = "Modello locale non disponibile: \(error.localizedDescription)"
+            print("[LLAMA][ERR] \(error)")
+        }
+    }
+    
     func handleScanned(barcode: String) {
         let code = barcode.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !code.isEmpty else {
