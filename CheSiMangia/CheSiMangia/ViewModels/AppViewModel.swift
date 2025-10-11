@@ -4,7 +4,6 @@
 //
 //  Created by Matteo Costella on 25/09/25.
 //
-
 import Foundation
 import CoreData
 
@@ -16,8 +15,17 @@ final class AppViewModel: ObservableObject {
     @Published var generated: [Recipe] = []
 
     let pantry = PantryStore.shared
-    var generator: RecipeGenerator = MockRecipeService() // sostituibile in runtime
+    var generator: RecipeGenerator = RecipeAPIService(
+        baseURL: URL(string: "http://192.168.0.104:8000")! // server port (cambiare a ogni riavvio server)
+    )
 
+    private let ctx = PersistenceController.shared.container.viewContext
+
+    init() {
+        Task { await loadSavedRecipes() }
+    }
+
+    // MARK: - Scan
     func handleScanned(barcode: String) {
         let code = barcode.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !code.isEmpty else {
@@ -82,11 +90,14 @@ final class AppViewModel: ObservableObject {
 
         isGenerating = true
         Task { [weak self] in
-            defer { self?.isGenerating = false }
+            guard let self else { return }
+            defer { self.isGenerating = false }
             do {
-                self?.generated = try await self?.generator.generate(req) ?? []
+                self.generated = try await self.generator.generate(req)
+
+                await self.persistGenerated()
             } catch {
-                self?.generated = []
+                self.generated = []
             }
         }
     }
@@ -94,7 +105,6 @@ final class AppViewModel: ObservableObject {
     // MARK: - Helpers
 
     private func fetchPantryProductNames() -> [String] {
-        let ctx = PersistenceController.shared.container.viewContext
         let req: NSFetchRequest<CDProduct> = CDProduct.fetchRequest()
         req.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
         do {
@@ -103,6 +113,47 @@ final class AppViewModel: ObservableObject {
         } catch {
             print("[STORE][ERR] fetch names: \(error)")
             return []
+        }
+    }
+
+
+    /// Carica le ricette salvate e popola `generated`
+    func loadSavedRecipes() async {
+        let req: NSFetchRequest<CDRecipe> = CDRecipe.fetchRequest()
+        req.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+        do {
+            let rows = try ctx.fetch(req)
+            self.generated = rows.compactMap { Recipe(from: $0) }
+        } catch {
+            print("[RECIPES][ERR] load: \(error)")
+        }
+    }
+
+    /// Salva in Core Data le ricette presenti in `generated` evitando duplicati per id
+    private func persistGenerated() async {
+        // Legge gli id già presenti
+        let existingFetch: NSFetchRequest<CDRecipe> = CDRecipe.fetchRequest()
+        let existing = (try? ctx.fetch(existingFetch)) ?? []
+        let existingIDs = Set(existing.compactMap { $0.id })
+
+        for r in generated where !existingIDs.contains(r.id) {
+            let obj = CDRecipe(context: ctx)
+            obj.apply(from: r)
+        }
+        do { try ctx.save() } catch { print("[RECIPES][ERR] save: \(error)") }
+    }
+
+    /// Elimina una ricetta (per swipe o bottone nel dettaglio)
+    func deleteRecipe(_ r: Recipe) {
+        let req: NSFetchRequest<CDRecipe> = CDRecipe.fetchRequest()
+        req.predicate = NSPredicate(format: "id == %@", r.id as CVarArg)
+        req.fetchLimit = 1
+        if let obj = try? ctx.fetch(req).first {
+            ctx.delete(obj)
+            try? ctx.save()
+        }
+        if let i = generated.firstIndex(where: { $0.id == r.id }) {
+            generated.remove(at: i)
         }
     }
 }
