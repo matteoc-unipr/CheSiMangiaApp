@@ -15,7 +15,17 @@ struct RootView: View {
         TabView {
             PantryView().tabItem { Label("Dispensa", systemImage: "cart") }
             GenerateView().tabItem { Label("Ricette", systemImage: "fork.knife") }
-            SettingsView().tabItem { Label("Preferenze", systemImage: "slider.horizontal.3") }
-        }
+            if let prefs = vm.pantry.prefs {
+                           SettingsView(prefs: prefs)
+                               .environmentObject(vm)
+                               .tabItem {
+                                   Label("Preferenze", systemImage: "slider.horizontal.3")
+                               }
+                       } else {
+                           ProgressView()
+                               .tabItem {
+                                   Label("Preferenze", systemImage: "slider.horizontal.3")
+                               }
+                       }        }
     }
 }

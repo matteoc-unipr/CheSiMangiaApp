@@ -6,6 +6,7 @@
 //
 import Foundation
 import CoreData
+import SwiftUI
 
 @MainActor
 final class AppViewModel: ObservableObject {
@@ -16,7 +17,7 @@ final class AppViewModel: ObservableObject {
 
     let pantry = PantryStore.shared
     var generator: RecipeGenerator = RecipeAPIService(
-        baseURL: URL(string: "http://192.168.0.104:8000")! // server port (cambiare a ogni riavvio server)
+        baseURL: URL(string: "http://192.168.0.105:8000")! // server port (cambiare a ogni riavvio server)
     )
 
     private let ctx = PersistenceController.shared.container.viewContext
@@ -73,32 +74,76 @@ final class AppViewModel: ObservableObject {
             lactoseFree: prefs.lactoseFree,
             peanutFree: prefs.peanutFree,
             maxMinutes: Int(prefs.maxMinutes),
-            skill: prefs.skill ?? "beginner"
+            skill: prefs.skill ?? "beginner",
+            servings: Int(prefs.servings)
         )
 
         let pantryNames = fetchPantryProductNames()
+        let pantryDetailed = fetchPantryDetailed()
         let mustUse = [product?.name ?? pantryNames.first ?? "ingredienti"]
 
         let req = RecipeRequest(
             pantry: pantryNames,
+            pantryDetailed: pantryDetailed,
             mustUse: mustUse,
-            servings: 2,
+            servings: up.servings,
             maxMinutes: up.maxMinutes,
             skill: up.skill,
             prefs: up
         )
 
         isGenerating = true
-        Task { [weak self] in
-            guard let self else { return }
-            defer { self.isGenerating = false }
+        Task { @MainActor in
+            defer { isGenerating = false }
             do {
-                self.generated = try await self.generator.generate(req)
+                let newOnes = try await self.generator.generate(req)
 
-                await self.persistGenerated()
+                // Post-process: kcal/porz + servings
+                let servings = up.servings
+                let processed = newOnes.map { r -> Recipe in
+                    var out = r
+                    if out.kcalPerServing == nil {
+                        out.kcalPerServing = NutritionEstimator.kcalPerServing(
+                            ingredients: r.ingredients,
+                            servings: servings
+                        )
+                    }
+                    out.servings = servings
+                    return out
+                }
+
+                // MERGE (unico blocco) + dedup per id
+                var seen = Set(self.generated.map(\.id))
+                var merged = self.generated
+                for r in processed where !seen.contains(r.id) {
+                    merged.insert(r, at: 0)
+                    seen.insert(r.id)
+                }
+                withAnimation { self.generated = merged }
+
+                // Salva solo le nuove
+                await self.persistGenerated(recipesToConsider: processed)
+
             } catch {
-                self.generated = []
+                print("[GEN][ERR] \(error)")
+                // non svuotare self.generated in caso d’errore
             }
+        }
+    }
+
+
+    // MARK: - Elimina tutte le ricette
+    func deleteAllRecipes() {
+        // Cancella da Core Data
+        let fetch: NSFetchRequest<CDRecipe> = CDRecipe.fetchRequest()
+        if let all = try? ctx.fetch(fetch) {
+            for obj in all { ctx.delete(obj) }
+            try? ctx.save()
+        }
+
+        // Svuota l'array pubblicato
+        withAnimation {
+            generated.removeAll()
         }
     }
 
@@ -129,19 +174,24 @@ final class AppViewModel: ObservableObject {
         }
     }
 
-    /// Salva in Core Data le ricette presenti in `generated` evitando duplicati per id
-    private func persistGenerated() async {
-        // Legge gli id già presenti
+    private func persistGenerated(recipesToConsider: [Recipe]) async {
+        // ids già in Core Data
         let existingFetch: NSFetchRequest<CDRecipe> = CDRecipe.fetchRequest()
         let existing = (try? ctx.fetch(existingFetch)) ?? []
         let existingIDs = Set(existing.compactMap { $0.id })
 
-        for r in generated where !existingIDs.contains(r.id) {
+        // salva solo le nuove
+        for r in recipesToConsider where !existingIDs.contains(r.id) {
             let obj = CDRecipe(context: ctx)
             obj.apply(from: r)
         }
-        do { try ctx.save() } catch { print("[RECIPES][ERR] save: \(error)") }
+        do {
+            try ctx.save()
+        } catch {
+            print("[RECIPES][ERR] save: \(error)")
+        }
     }
+
 
     /// Elimina una ricetta (per swipe o bottone nel dettaglio)
     func deleteRecipe(_ r: Recipe) {
@@ -156,4 +206,19 @@ final class AppViewModel: ObservableObject {
             generated.remove(at: i)
         }
     }
+    
+    private func fetchPantryDetailed() -> [PantryNameQty] {
+        let req: NSFetchRequest<CDProduct> = CDProduct.fetchRequest()
+        req.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+        let items = (try? ctx.fetch(req)) ?? []
+
+        return items.map { p in
+            PantryNameQty(
+                name: p.name ?? "Senza nome",
+                quantity: p.totalDisplay // es. "300 g" o "1.5 l"
+            )
+        }
+
+    }
+
 }

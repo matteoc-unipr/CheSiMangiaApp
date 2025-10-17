@@ -77,6 +77,12 @@ struct ProductDetailView: View {
                 }
                 .padding(.vertical, 20) // più distacco sopra/sotto
 
+                if let s = product.perUnitDisplay {
+                    Label("Per unità: \(s)", systemImage: "scalemass")
+                }
+                if let s = product.totalDisplay {
+                    Label("Disponibile: \(s)", systemImage: "cube.box.fill")
+                }
                 // Badge Nutri-Score & NOVA
                 HStack(spacing: 12) {
                     if let ns = product.nutriscore?.uppercased() {

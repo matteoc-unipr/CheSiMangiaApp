@@ -4,6 +4,7 @@
         <attribute name="lactoseFree" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="maxMinutes" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="peanutFree" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="servings" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
         <attribute name="skill" attributeType="String"/>
         <attribute name="vegetarian" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
@@ -18,6 +19,8 @@
         <attribute name="nova" optional="YES" attributeType="Integer 16" minValueString="1" maxValueString="4" defaultValueString="0" usesScalarValueType="NO"/>
         <attribute name="nutrimentsJSON" optional="YES" attributeType="Binary"/>
         <attribute name="nutriscore" optional="YES" attributeType="String" minValueString="1" maxValueString="1" regularExpressionString="^[A-E]$"/>
+        <attribute name="perUnitUnit" optional="YES" attributeType="String"/>
+        <attribute name="perUnitValue" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="quantity" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>

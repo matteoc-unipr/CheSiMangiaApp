@@ -57,7 +57,12 @@ final class RecipeAPIService: RecipeGenerator {
 
     func generate(_ req: RecipeRequest) async throws -> [Recipe] {
         // Mappa pantry in nome + (opzionale) quantità; qui usiamo solo il nome
-        let pantry = req.pantry.map { APIPantryItem(name: $0, quantity: nil) }
+        let items: [APIPantryItem]
+        if let det = req.pantryDetailed {
+            items = det.map { APIPantryItem(name: $0.name, quantity: $0.quantity) }
+        } else {
+            items = req.pantry.map { APIPantryItem(name: $0, quantity: nil) }
+        }
 
         // Mappa preferenze dell'app nel contratto del server
         var avoid: [String] = []
@@ -78,11 +83,11 @@ final class RecipeAPIService: RecipeGenerator {
         )
 
         let body = APIGenerateRequest(
-            pantry: pantry,
+            pantry: items,
             count: 3,
             constraints: constraints
         )
-
+        
         var urlReq = URLRequest(url: baseURL.appending(path: "/recipes/generate"))
         urlReq.httpMethod = "POST"
         urlReq.addValue("application/json", forHTTPHeaderField: "Content-Type")

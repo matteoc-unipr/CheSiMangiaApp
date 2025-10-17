@@ -29,6 +29,7 @@ final class PantryStore: ObservableObject {
             p.peanutFree = false
             p.maxMinutes = 30
             p.skill = "beginner"
+            p.servings = 2
             try? ctx.save()
             prefs = p
         }
@@ -88,6 +89,14 @@ final class PantryStore: ObservableObject {
         // Nutriments: JSON “leniente”
         if let n = p.nutriments {
             obj.nutrimentsJSON = try JSONEncoder().encode(n)   // usa il tuo JSONValue
+        }
+        
+        if let (val, unit) = extractPerUnit(from: p) {
+            obj.perUnitValue = val
+            obj.perUnitUnit = unit.rawValue   // "g", "kg", "ml", "l"
+        } else {
+            obj.perUnitValue = 0
+            obj.perUnitUnit = nil
         }
 
         obj.createdAt = .now

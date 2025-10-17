@@ -10,6 +10,7 @@ import SwiftUI
 
 struct GenerateView: View {
     @EnvironmentObject var vm: AppViewModel
+    @State private var showDeleteAllAlert = false
 
     var body: some View {
         NavigationStack {
@@ -23,7 +24,8 @@ struct GenerateView: View {
                             HStack {
                                 Text(r.title).font(.headline)
                                 Spacer()
-                                Badge(text: "Eco \(EcoScore.score(for: r.ingredients))")
+                                Badge(text: "Eco \(EcoScore.score(for: r.ingredients, servings: r.servings))")
+
                             }
                             Text("\(r.minutes) min • \(r.kcalPerServing ?? 0) kcal/porz")
                                 .foregroundStyle(.secondary)
@@ -55,20 +57,38 @@ struct GenerateView: View {
                     RecipeDetailView(recipe: r)
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        // genera partendo dall’intera dispensa (nessun prodotto focalizzato)
-                        vm.generateRecipes(using: nil)
-                    } label: {
-                        Label("Genera", systemImage: "sparkles")
+            
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                vm.generateRecipes(using: nil)
+                            } label: {
+                                Label("Genera", systemImage: "sparkles")
+                            }
+                            .disabled(vm.isGenerating)
+                        }
+
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button(role: .destructive) {
+                                showDeleteAllAlert = true
+                            } label: {
+                                Label("Elimina tutte", systemImage: "trash")
+                            }
+                        }
                     }
-                    .disabled(vm.isGenerating)
+                    .alert("Eliminare tutte le ricette?", isPresented: $showDeleteAllAlert) {
+                        Button("Elimina tutte", role: .destructive) {
+                            vm.deleteAllRecipes()
+                        }
+                        Button("Annulla", role: .cancel) { }
+                    }
+
                 }
             }
         }
-    }
-}
+    
+
+
 
 
 struct RecipeDetailView: View {

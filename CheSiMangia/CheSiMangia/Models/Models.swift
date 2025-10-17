@@ -53,7 +53,10 @@ struct OFFProduct: Decodable {
         let image_url: String?
         let nutriscore_grade: String?
         let nova_group: Int?
-        let nutriments: [String: JSONValue]?   // ← cambiato
+        let nutriments: [String: JSONValue]?   
+        let product_quantity: JSONValue?       // es. 150 (spesso numero, ma può arrivare come string)
+        let product_quantity_unit: String?     // es. "g" o "ml"
+        let quantity: String?
     }
 }
 
@@ -61,10 +64,15 @@ struct OFFProduct: Decodable {
 struct Nutriments: Codable { let energyKcal: Double?; let proteins: Double?; let fat: Double?; let carbs: Double? }
 
 
-struct Recipe: Identifiable, Codable { let id: UUID = .init(); let title: String; let ingredients: [String]; let steps: [String]; let minutes: Int; let kcalPerServing: Int?; let variants: [String] }
+struct Recipe: Identifiable, Codable { let id: UUID = .init(); let title: String; let ingredients: [String]; let steps: [String]; let minutes: Int; var kcalPerServing: Int?; let variants: [String]; var servings: Int = 1  }
 
 
-struct RecipeRequest { let pantry: [String]; let mustUse: [String]; let servings: Int; let maxMinutes: Int; let skill: String; let prefs: UserPrefs }
+struct RecipeRequest { let pantry: [String]; let pantryDetailed: [PantryNameQty]?; let mustUse: [String]; let servings: Int; let maxMinutes: Int; let skill: String; let prefs: UserPrefs }
 
 
-struct UserPrefs: Codable { var vegetarian: Bool; var lactoseFree: Bool; var peanutFree: Bool; var maxMinutes: Int; var skill: String }
+struct UserPrefs: Codable { var vegetarian: Bool; var lactoseFree: Bool; var peanutFree: Bool; var maxMinutes: Int; var skill: String; var servings: Int  }
+
+struct PantryNameQty: Codable {
+    let name: String
+    let quantity: String? // es. "300 g" o "500 ml"
+}
